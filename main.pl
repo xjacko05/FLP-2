@@ -53,8 +53,9 @@ edge(3,6) :- !.
 edge(5,6) :- !.
 edge(3,5) :- !.
 
-:- dynamic
-    cycle/1.
+:- dynamic cycle/1.
+:- dynamic edge/2.
+:- dynamic point/1.
 
 filter([H|_], [H|_]).
 filter(_, _) :- fail.
@@ -70,14 +71,33 @@ check_edge([X,Y|T]) :-
 wrap([H|List], Result) :-
     append([H|List], [H], Result).
 
-print_permutations(List) :-
+custom_print([]) :- !.
+custom_print([_]) :- !.
+custom_print([X,Y|T]) :-
+    write(X),
+    write("-"),
+    write(Y),
+    write(" "),
+    custom_print([Y|T]).
+
+print_cycles(List) :-
     permutation(List, Perm),
     filter(List, Perm),
     wrap(Perm, Wrapped),
     check_edge(Wrapped),
     reverse(Wrapped, Reversed),
     (\+ cycle(Reversed)),
-    asserta((cycle(Wrapped) :- true)),
-    write(Wrapped), nl,
+    asserta((cycle(Wrapped) :- !)),%might need to be true instead of cut
+    %write(Wrapped), nl,
+    custom_print(Wrapped), nl,
     fail.
-print_permutations(_).
+print_cycles(_).
+
+process_input :-
+    read_line_to_string(user_input, Line),
+    sub_atom(Line, 0, 1, _, First),
+    sub_atom(Line, 2, 1, _, Third),
+    assertz((edge(First, Third) :- !)),
+    (((\+ point(First)), asserta((point(First)))) ; true),
+    (((\+ point(Third)), asserta((point(Third)))) ; true),
+    !.
