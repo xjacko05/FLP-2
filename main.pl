@@ -14,14 +14,22 @@ main :-
     findall(X, vertex(X), Vertices),
     print_cycles(Vertices).
 
-%fill knowledge base with edges and vertices based on input
+%fill knowledge base with edges and vertices based on input, ignores lines with different format
 process_input([]).
-process_input([[From,_,To]|T]) :-
+process_input([[From,' ',To]|T]) :-
+    valid_vertex_name(From),
+    valid_vertex_name(To),
     %vertex is added only if it was not added before
     (((\+ vertex(From)), assertz((vertex(From)))) ; true),
     (((\+ vertex(To)), assertz((vertex(To)))) ; true),
     assertz((edge(From, To) :- !)),
     process_input(T).
+process_input([_|T]) :-
+    process_input(T).
+
+%checks if vertex name is valid (if it is capital letter of english aplhabet)
+valid_vertex_name(Vertex) :-
+  member(Vertex, ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']).
 
 %filters duplicate paths, which are essentially same, but with different offset
 filter([H|_], [H|_]).
