@@ -1,6 +1,7 @@
 % Hamiltonian cycle
 % FLP LOG 2022/2023
 % Autor: Martin Jacko (222092) <xjacko05@stud.fit.vutbr.cz>
+% Contents: prolog code
 
 %stating which facts will be dynamic
 :- dynamic cycle/1.

@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Hamiltonian cycle
+# FLP LOG 2022/2023
+# Autor: Martin Jacko (222092) <xjacko05@stud.fit.vutbr.cz>
+# Contents: testing script
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'

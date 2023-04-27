@@ -1,5 +1,7 @@
 # FLP 2022/2023 - logický projekt: Prolog
 
+Martin Jacko (222092) <xjacko05@stud.fit.vutbr.cz>
+
 ## Popis projektu
 
 Program napísaný v jazyku Prolog implementujúci hľadanie Hamiltonovských kružníc v grafe. Pri implementácií bol využitý SWI-Prolog verzia 9.0.4 (pri použití s verziou 6.6.1 (server merlin) funkčnosť nezmenená).
