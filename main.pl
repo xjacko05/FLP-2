@@ -1,76 +1,46 @@
-%edge(a,b) :- !.
-%edge(a,c) :- !.
-%edge(a,d) :- !.
-%edge(a,e) :- !.
-%edge(a,f) :- !.
-%edge(a,g) :- !.
-%edge(a,h) :- !.
-%edge(a,i) :- !.
-%edge(b,c) :- !.
-%edge(b,d) :- !.
-%edge(b,e) :- !.
-%edge(b,f) :- !.
-%edge(b,g) :- !.
-%edge(b,h) :- !.
-%edge(b,i) :- !.
-%edge(c,d) :- !.
-%edge(c,e) :- !.
-%edge(c,f) :- !.
-%edge(c,g) :- !.
-%edge(c,h) :- !.
-%edge(c,i) :- !.
-%edge(d,e) :- !.
-%edge(d,f) :- !.
-%edge(d,g) :- !.
-%edge(d,h) :- !.
-%edge(d,i) :- !.
-%edge(e,f) :- !.
-%edge(e,g) :- !.
-%edge(e,h) :- !.
-%edge(e,i) :- !.
-%edge(f,g) :- !.
-%edge(f,h) :- !.
-%edge(f,i) :- !.
-%edge(g,h) :- !.
-%edge(g,i) :- !.
-%edge(h,i) :- !.
+% Hamiltonian cycle
+% FLP LOG 2022/2023
+% Autor: Martin Jacko (222092) <xjacko05@stud.fit.vutbr.cz>
 
-%edge(a,b) :- !.
-%edge(a,c) :- !.
-%edge(a,d) :- !.
-%edge(b,c) :- !.
-%edge(b,d) :- !.
-%edge(c,d) :- !.
-
-%edge(1,2) :- !.
-%edge(2,3) :- !.
-%edge(3,4) :- !.
-%edge(4,5) :- !.
-%edge(5,1) :- !.
-%edge(1,6) :- !.
-%edge(2,6) :- !.
-%edge(3,6) :- !.
-%edge(5,6) :- !.
-%edge(3,5) :- !.
-
+%stating which facts will be dynamic
 :- dynamic cycle/1.
 :- dynamic edge/2.
-:- dynamic point/1.
+:- dynamic vertex/1.
 
+main :-
+    prompt(_, ''),
+	read_lines(Input),
+    process_input(Input),
+    findall(X, vertex(X), Vertices),
+    print_cycles(Vertices).
+
+%fill knowledge base with edges and vertices based on input
+process_input([]).
+process_input([[From,_,To]|T]) :-
+    %vertex is added only if it was not added before
+    (((\+ vertex(From)), assertz((vertex(From)))) ; true),
+    (((\+ vertex(To)), assertz((vertex(To)))) ; true),
+    assertz((edge(From, To) :- !)),
+    process_input(T).
+
+%filters duplicate paths, which are essentially same, but with different offset
 filter([H|_], [H|_]).
 filter(_, _) :- fail.
 
-check_edge([]) :- !.
-check_edge([_]) :- !.
-check_edge([X,Y|T]) :-
+%checks if given path exists according to graph description
+check_path([]) :- !.
+check_path([_]) :- !.
+check_path([X,Y|T]) :-
     !,
     (edge(X,Y); edge(Y,X)),
     !,
-    check_edge([Y|T]).
+    check_path([Y|T]).
 
-wrap([H|List], Result) :-
-    append([H|List], [H], Result).
+%will transform given path to cycle by appending first element of list to ist end
+wrap([H|T], Result) :-
+    append([H|T], [H], Result).
 
+%takes list, which represents cycle and prints it according to specification
 custom_print([]) :- !.
 custom_print([_]) :- !.
 custom_print([X,Y|T]) :-
@@ -80,40 +50,21 @@ custom_print([X,Y|T]) :-
     write(' '),
     custom_print([Y|T]).
 
+%generates every possible cycle in a given graph
 print_cycles(List) :-
-    permutation(List, Perm),
-    filter(List, Perm),
-    wrap(Perm, Wrapped),
-    check_edge(Wrapped),
-    reverse(Wrapped, Reversed),
+    permutation(List, Path),
+    filter(List, Path),
+    wrap(Path, Cycle),
+    check_path(Cycle),
+    %checks if reverse of the current path was already processed, to avoid duplicates
+    reverse(Cycle, Reversed),
     (\+ cycle(Reversed)),
-    asserta((cycle(Wrapped) :- !)),%might need to be true instead of cut
-    %write(Wrapped), nl,
-    custom_print(Wrapped), nl,
+    asserta((cycle(Cycle) :- !)),
+    custom_print(Cycle), nl,
     fail.
 print_cycles(_).
 
-%process_input :-
-%    read_line_to_string(user_input, Line),
-%    sub_atom(Line, 0, 1, _, First),
-%    sub_atom(Line, 2, 1, _, Third),
-%    assertz((edge(First, Third) :- !)),
-%    (((\+ point(First)), asserta((point(First)))) ; true),
-%    (((\+ point(Third)), asserta((point(Third)))) ; true),
-%    !.
-
-%process_input :-
-%    read_line_to_string(user_input, Line),
-%    (   Line \= end_of_file ->
-%        sub_atom(Line, 0, 1, _, First),
-%        sub_atom(Line, 2, 1, _, Third),
-%        assertz((edge(First, Third) :- !)),
-%        (((\+ point(First)), asserta((point(First)))) ; true),
-%        (((\+ point(Third)), asserta((point(Third)))) ; true),
-%        process_input
-%    ;   true
-%    ).
-
+%IO handling, taken from https://moodle.vut.cz/pluginfile.php/573866/mod_resource/content/2/flp-cv4.pdf
 read_line(L,C) :-
     get_char(C),
     (isEOFEOL(C), L = [], !;
@@ -128,30 +79,3 @@ read_lines(Ls) :-
     read_line(L, C),
     (C == end_of_file, Ls=[] ;
     (read_lines(LLs), [L|LLs] = Ls)).
-
-main :-
-    prompt(_, ''),
-	read_lines(INPUT),
-    %write(INPUT), nl,
-    fill_edges(INPUT),
-    findall(X, point(X), POINTS),
-    print_cycles(POINTS).
-    %remove_duplicates(POINTS, FILTERED),
-    %write(FILTERED), nl.
-
-fill_edges([]).
-fill_edges([[From,_,To]|Tail]) :-
-    %asserta((point(From))),
-    %asserta((point(To))),
-    (((\+ point(From)), asserta((point(From)))) ; true),
-    (((\+ point(To)), asserta((point(To)))) ; true),
-    assertz((edge(From, To) :- !)),
-    fill_edges(Tail).
-
-%remove_duplicates([], []).
-%remove_duplicates([X|Xs], Ys) :-
-%    member(X, Xs),
-%    remove_duplicates(Xs, Ys).
-%remove_duplicates([X|Xs], [X|Ys]) :-
-%    \+ member(X, Xs),
-%    remove_duplicates(Xs, Ys).
