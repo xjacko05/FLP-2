@@ -75,9 +75,9 @@ custom_print([]) :- !.
 custom_print([_]) :- !.
 custom_print([X,Y|T]) :-
     write(X),
-    write("-"),
+    write('-'),
     write(Y),
-    write(" "),
+    write(' '),
     custom_print([Y|T]).
 
 print_cycles(List) :-
@@ -139,7 +139,6 @@ main :-
     %remove_duplicates(POINTS, FILTERED),
     %write(FILTERED), nl.
 
-fill_edges().
 fill_edges([]).
 fill_edges([[From,_,To]|Tail]) :-
     %asserta((point(From))),
