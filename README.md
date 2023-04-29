@@ -14,11 +14,14 @@ Program v rámci spracovania vstupu pridá do knowledge base jednotlivé hrany a
 
 ## Testovanie
 
-Pre testovanie funkčnosti implementácie bolo vytvorených 7 testov.
+Pre testovanie funkčnosti a výkonnosti implementácie bolo vytvorené 4 testy popísané nižšie.
 
 1. Ukážkový vstup a výstup zo zadania (upravené poradie)
-2. Zložitý graf s 20160 kužnicami (prevzaté z Discordu)
+2. Kompletný graf s 9 vrcholmi a 20160 kužnicami
 3. Graf s 48 kužnicami (prevzaté z Discordu)
+4. Kompletný graf s 10 vrcholmi a 181440 kužnicami (tento test sa nespúšťa automaticky)
+
+V rámci testovania výkonnosti dosahoval program pri kompletnom grafe s 9 vrcholmi čas behu 3.504 sekundy a pri komplentnom grafe s 10 vrcholmi 5 minút a 14.147 sekúnd. Testované na WSL Ubuntu 20.04 bežiacom na i7-7700HQ.
 
 Pre prípad záujmu sú vstupy a výstupy testov zachované až do vykonania ```make clean```.
 
