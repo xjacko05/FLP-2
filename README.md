@@ -14,7 +14,7 @@ Program v rámci spracovania vstupu pridá do knowledge base jednotlivé hrany a
 
 ## Testovanie
 
-Pre testovanie funkčnosti a výkonnosti implementácie bolo vytvorené 4 testy popísané nižšie.
+Pre testovanie funkčnosti a výkonnosti implementácie boli vytvorené 4 testy.
 
 1. Ukážkový vstup a výstup zo zadania (upravené poradie)
 2. Kompletný graf s 9 vrcholmi a 20160 kužnicami
