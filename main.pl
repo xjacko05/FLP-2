@@ -61,6 +61,8 @@ custom_print([X,Y|T]) :-
 
 %generates every possible cycle in a given graph
 print_cycles(List) :-
+    (\+ length(List, 1)),
+    (\+ length(List, 2)),
     permutation(List, Path),
     filter(List, Path),
     wrap(Path, Cycle),
